@@ -7,7 +7,7 @@ for linux and Windows later on.
 
 **IMPORTANT:**
 
-- Read this document first and if you think you need help don't hesitate to ask.
+Read this document first and if you think you need help don't hesitate to ask.
 
 
 ## Basic Requirements
@@ -301,11 +301,11 @@ Once that's done, you can launch `tomcat` with the following command:
 
 This should start `tomcat` on port `8080`.
 
-If everything is OK and once the server is started a browser window will be opened pointing at `http://localhost:8080`.I
+If everything is OK and once the server is started a browser window will be opened pointing at `http://localhost:8080`.
 
-Since this is the first time your executing `liferay-portal` you'll have to answer a few questions in a wizard:
+Since this is the first time you're executing `liferay-portal` you'll have to answer a few questions in a wizard.
 
-We typically use `test` as the user name and password in development mode but you can choose anything you want.
+We typically use "test" as the user name and password in development mode but you can choose anything you want.
 
 Once that's done, you'll need to stop the `tomcat` server process and start it again.
 
