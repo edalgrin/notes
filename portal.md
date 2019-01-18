@@ -148,6 +148,11 @@ Open a terminal and issue the following command:
 brew install ant mysql@5.7
 ```
 
+**IMPORTANT:**
+
+If the above fails, ask for help.
+
+
 Wait for everything to complete correctly and make sure you have access to both the `ant` and `mysql` commands.
 
 ```shell
@@ -185,8 +190,12 @@ mysql_secure_installation
 # Reload privileges
 ```
 
-You'll also need to create a database for `liferay-portal`, we typically name it `lportal_master` but you can choose any
-name you want, you'll just need to remember which name you chose later on
+You'll also need to create a database for `liferay-portal`, we typically name it `lportal_master`.
+
+**IMPORTANT:**
+
+If you choose another name for your database the following instructions will need to be updated
+to match your chosen database name. Be warned.
 
 ```shell
 mysql -uroot -p
@@ -206,7 +215,7 @@ You'll also need a couple of environment variables defined:
 ```shell
 export ANT_OPTS="-Xmx4096m"
 export JAVA_HOME=$(/usr/libexec/java_home)
-export JAVA_OPTS="-Xmx4096m"
+export JAVA_OPTS="-Xmx4096m" # You could probably re-use $ANT_OPTS here
 ```
 
 We'll also create a `portal-ext.properties` file with our portal's preferences:
@@ -223,33 +232,26 @@ Inside this `bundles` directory, create a file named `portal-ext.properties` wit
 ```properties
 ## Database Configuration
 jdbc.default.driverClassName=com.mysql.jdbc.Driver
+
+## Make sure this matches the database name you created
+## and your MySQL credentials!
 jdbc.default.url=jdbc:mysql://localhost/lportal_master?useUnicode=true&characterEncoding=UTF-8
 jdbc.default.username=YOUR_MYSQL_USERNAME
 jdbc.default.password=YOUR_MYSQL_PASSWORD
 
 ## Development Configuration
-browser.launcher.url=
-
-## Disable caches
 com.liferay.portal.servlet.filters.cache.CacheFilter=false
 com.liferay.portal.servlet.filters.alloy.CSSFilter=false
 com.liferay.portal.servlet.filters.etag.ETagFilter=false
 com.liferay.portal.servlet.filters.header.HeaderFilter=false
 com.liferay.portal.servlet.filters.themepreview.ThemePreviewFilter=true
-
 combo.check.timestamp=true
-
 javascript.fast.load=false
 javascript.log.enabled=false
-
 layout.template.cache.enabled=false
-
 minifier.enabled=false
 minifier.inline.content.cache.size=0
-
 module.framework.properties.lpkg.index.validator.enabled=false
-
-# Enable gogo shell
 module.framework.properties.osgi.console=localhost:11311
 ```
 
@@ -283,33 +285,43 @@ ant all
 # ask @julien for some help
 ```
 
-Once that's done, you can launch tomcat with the following command:
+Once that's done, you can launch `tomcat` with the following command:
 
 
 ```shell
 # Assuming your are in the 'portal/liferay-portal' directory
 
-../bundles/tomcat-VERISON/bin/catalina.sh run
+
+# You'll need to replace
+# tomcat-VERSION with the tomcat version that comes with liferay-portal.
+# Tip: Use the tab key assuming your shell has tab completion.
+
+../bundles/tomcat-VERSION/bin/catalina.sh run
 ```
 
-If everything is OK once the server is started a browser window will be opened pointing at `http://localhost:8080`.
+This should start `tomcat` on port `8080`.
 
-Since this is the first time your executing `liferay-portal` you'll have to answer to a few questions in a wizard
-(we typically use `test` as the user name and password in development mode but you can choose anything you want).
+If everything is OK and once the server is started a browser window will be opened pointing at `http://localhost:8080`.I
 
-Once that's done, you'll need to stop the tomcat process and start it again.
+Since this is the first time your executing `liferay-portal` you'll have to answer a few questions in a wizard:
 
-If you don't want a new browser tab to be opened each time you start tomcat, you can add
+We typically use `test` as the user name and password in development mode but you can choose anything you want.
+
+Once that's done, you'll need to stop the `tomcat` server process and start it again.
+
+**IMPORTANT:**
+
+If you don't want a new browser tab/window to be opened each time you start `tomcat`, you can add
 
 ```properties
 browser.launcher.url=
 ```
 
-To your `portal-ext.properties` file
+To the `portal-ext.properties` file your created.
 
 ## Last steps
 
-Add an 'upstream' remote to your local `liferay-portal` repository
+Add an `upstream` remote to your local `liferay-portal` repository that points to `liferay` 's repo on GitHub.
 
 ```shell
 git remote add upstream git@github.com:liferay/liferay-portal.git
