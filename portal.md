@@ -31,10 +31,6 @@ This guide assumes that:
 
 4. Clone the `liferay-portal` repository in the `portal` directory create above
 
-   **NOTE:** Don't worry if you've already cloned the `liferay-portal` git repository somewhere else,
-             you can always do this before compiling the source code.
-
-
     ```shell
     # This might seem obvious but just in case it isn't,
     # replace YOUR_GITHUB_USERNAME with your GitHub user name.
@@ -45,25 +41,38 @@ This guide assumes that:
     #       enter sleep mode and that your internet connection is working correctly
     ```
 
+   **NOTE:**
+
+   Don't worry if you've already cloned the `liferay-portal` git repository somewhere else,
+   you can always do this before compiling the source code, or even later on.
+
 ## Installing the required software
 
 You'll also need to have the following tools installed on your machine
 
 - [Apache Ant](https://ant.apache.org/)
+
 - [Java JDK8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
 - [MySQL 5.7](https://dev.mysql.com/downloads/mysql/5.7.html)
-- [homebrew](https://brew.sh)
+
+- [Homebrew](https://brew.sh)
+
 - [nodejs](https://nodejs.org/en/download/)
 
-**NOTE**: If your know how to install these tools yourself, feel free to skip this section.
+
+**IMPORTANT**:
+
+If your know how to install these tools yourself, feel free to skip this section.
+
 
 We'll go throught them one by one:
 
 ### Homebrew
 
-On macOS (and MacOS X) we'll be using homebre to install Apache Ant and MySQL.
+On macOS (and MacOS X) we'll be using Homebrew to install Apache Ant and MySQL.
 
-If the `brew` command is not availalbe on your system, please install hombrew with:
+If the `brew` command is not availalbe on your system, please install Hombrew with:
 
 ```shell
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -301,7 +310,9 @@ Add an 'upstream' remote to your local `liferay-portal` repository
 git remote add upstream git@github.com:liferay/liferay-portal.git
 ```
 
-Configure the `gh` utlity
+Configure the `gh` utlity:
+
+Create a file named `.gh.json` in your home directory with the following content:
 
 ```json
 {
@@ -316,8 +327,8 @@ Configure the `gh` utlity
   "default_remote": "origin",
   "default_pr_forwarder": "",
   "default_pr_reviewer": "",
-  "github_token": "YOUR_GITHUB_TOKEN",
-  "github_user": "YOUR_GITHUB_USERNAME",
+  "github_token": "",
+  "github_user": "",
   "hooks": {
     "issue": {
       "close": {
@@ -412,15 +423,44 @@ Configure the `gh` utlity
   "pull_branch_name_prefix": "pr-",
   "plugins": {
     "jira": {
-      "host": "issues.liferay.com",
-      "user": "YOUR_JIRA_USERNAME",
-      "password": "YOUR_JIRA_PASSWORD",
+      "host": "",
+      "user": "",
+      "password": "",
       "base": "rest/api/2"
     }
   },
   "replace": {},
   "signature": " <br><br>:octocat: *Sent from [GH](http://nodegh.io).*",
-  "plugins_path": "PATH_TO_YOUR_NODE_INSTALLATION/lib/node_modules"
+  "plugins_path": "FULL_PATH_TO_YOUR_NODE_INSTALLATION/lib/node_modules"
 }
 ```
 
+**IMPORTANT:**
+
+Be sure to replace `FULL_PATH_TO_YOUR_NODE_INSTALLATION` with the absolute path to your nodejs installation directory
+or you'll get a warning about `gh` not being able to read it's plugin directory.
+
+
+In your terminal try logging into your GitHub account with `gh` by running the following command:
+
+```shell
+gh us
+```
+
+You'll be prompted to enter your GitHub user name and password and if everything works fine your credentials will be stored.
+
+You can also configure the `gh-jira` plugin to be able to manage Jira related tasks from the command line.
+
+Enter the following command in your terminal:
+
+```shell
+gh ji
+```
+
+**IMPORTANT:**
+
+When prompted for the server, enter "issues.liferay.com"
+
+## Well done
+
+That's it, you should be ready to work on liferay portal, have fun.
