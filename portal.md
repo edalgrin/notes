@@ -1,27 +1,21 @@
 # Liferay portal installation
 
-This is a small guide to setup `liferay-portal` on your development machine.
+This is a guide to setup [liferay-portal](https://github.com/liferay/liferay-portal) on your development machine.
 
 For the moment this document is "macOS" (and MacOS X) specific but I'll add notes
-for linux and windows later on.
+for linux and Windows later on.
 
 ## Basic Requirements
 
-- [git](https://git-scm.com/)
-
 This guide assumes that:
 
-- `git` is installed and configured on your machine
+- [Git](https://git-scm.com) is installed and configured on your machine.
 
-- You have a GitHub account and are part of the `liferay` organization.
+- You have a [GitHub](https://github.com) account and are part of the [liferay](https://github.com/liferay) organization.
 
-- We'll install more things later on so make sure you have the correct permissions
-  on your machine and a few GB's of storage avaialbe on your HDD.
+- You have the correct permissions to install software on your machine.
 
-
-Additionally on Mac, you'll also install
-
-- [homebrew](https://brew.sh/)
+- You have a few GB's (at least 3-4GB) of storage avaialbe on your HDD.
 
 ## Getting the source code
 
@@ -29,15 +23,27 @@ Additionally on Mac, you'll also install
 
 2. Fork the [liferay-portal](https://github.com/liferay/liferay-portal) repository to your account.
 
-3. Clone the liferay-portal repository
+3. Create a `portal` directory:
 
-```shell
-# Replace YOUR_GITHUB_USERNAME with your GitHub user name.
+    ```shell
+    mkdir -p portal
+    ```
 
-git clone git@github.com:YOUR_GITHUB_USERNAME/liferay-portal.git
-```
+4. Clone the `liferay-portal` repository in the `portal` directory create above
 
-4. Wait ...
+   **NOTE:** Don't worry if you've already cloned the `liferay-portal` git repository somewhere else,
+             you can always do this before compiling the source code.
+
+
+    ```shell
+    # This might seem obvious but just in case it isn't,
+    # replace YOUR_GITHUB_USERNAME with your GitHub user name.
+
+    git clone git@github.com:YOUR_GITHUB_USERNAME/liferay-portal.git
+
+    # NOTE: This might take a long time so make sure your machine doesn't
+    #       enter sleep mode and that your internet connection is working correctly
+    ```
 
 ## Installing the required software
 
@@ -46,12 +52,26 @@ You'll also need to have the following tools installed on your machine
 - [Apache Ant](https://ant.apache.org/)
 - [Java JDK8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [MySQL 5.7](https://dev.mysql.com/downloads/mysql/5.7.html)
+- [homebrew](https://brew.sh)
 - [nodejs](https://nodejs.org/en/download/)
 
-Let's go throught them one by one:
+**NOTE**: If your know how to install these tools yourself, feel free to skip this section.
 
+We'll go throught them one by one:
 
-- **Java JDK8**
+### Homebrew
+
+On macOS (and MacOS X) we'll be using homebre to install Apache Ant and MySQL.
+
+If the `brew` command is not availalbe on your system, please install hombrew with:
+
+```shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Wait for everything to termiate correctly.
+
+### Java JDK8
 
 Open your browser and visit [this](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) URL.
 
@@ -70,28 +90,337 @@ Follow the installation process and make sure everything completes succesfully.
 Open a terminal and make sure you can execute the `java` command
 
 ```shell
-java --version
+java -version
+
+# This should print something similar to:
+# java version "1.8.0_152"
+# Java(TM) SE Runtime Environment (build 1.8.0_152-b16)
+# Java HotSpot(TM) 64-Bit Server VM (build 25.152-b16, mixed mode)
 ```
 
-**NOTE**: If your operating system has a package manager or a tool that allows
-you to
-
-- **node.js**
+### nodejs
 
 Open your browser and visit [this](https://nodejs.org/en/download/) URL.
 
-Download the installer for your operating system.
+Download the installer for your operating system, execute the installer and make sure everything completes succesfully.
 
+Open a terminal and make sure you can execute the `node` and `npm` commands
 
+```shell
+node -v
 
+# This should print something similar to:
+# v10.15.0
 
+npm -v
 
-For `ant` and `mysql` we'll be using `homebrew`:
+# This should print something similar to:
+# 6.4.1
+```
+
+You'll also want to make sure you can install **global** dependencies.
+
+```shell
+npm i -g gh gh-jira gradle-launcher
+```
+
+If the above fails because of wrong permissions or if you'd like to use another directory for your global modules, please read [this](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
+
+### Apache Ant and MySQL 5.7
+
+Open a terminal and issue the following command:
 
 ```shell
 brew install ant mysql@5.7
 ```
 
-## Setup
+Wait for everything to complete correctly and make sure you have access to both the `ant` and `mysql` commands.
 
+```shell
+ant -v
+
+# This should print something similar to:
+# Apache Ant(TM) version 1.10.5 compiled on July 10 2018
+# Trying the default build file: build.xml
+# Buildfile: build.xml does not exist!
+# Build failed
+```
+
+```shell
+mysql --version
+
+# This should print something similar to:
+# mysql  Ver 14.14 Distrib 5.7.22, for osx10.11 (x86_64) using  EditLine wrapper
+```
+
+Make sure that you can start the MySQL server correctly
+
+```shell
+mysql.server start
+```
+
+You might also want to secure your `mysql` installation by running the following command:
+**NOTE:** If you have no idea of what your doing, ask @julien for some help.
+
+```shell
+mysql_secure_installation
+
+# Answer the questions:
+# Remove test database and users
+# Disallow remote login
+# Reload privileges
+```
+
+You'll also need to create a database for `liferay-portal`, we typically name it `lportal_master` but you can choose any
+name you want, you'll just need to remember which name you chose later on
+
+```shell
+mysql -uroot -p
+# Enter your password
+
+# Create the DB
+CREATE DATABASE `lportal_master` DEFAULT CHARACTER SET utf8;
+
+# Exit mysql
+exit
+```
+
+## Configuration
+
+You'll also need a couple of environment variables defined:
+
+```shell
+export ANT_OPTS="-Xmx4096m"
+export JAVA_HOME=$(/usr/libexec/java_home)
+export JAVA_OPTS="-Xmx4096m"
+```
+
+We'll also create a `portal-ext.properties` file with our portal's preferences:
+
+In the `portal` directory you created above, you need to create a `bundles` sub-directory:
+
+```shell
+cd portal
+mkdir -p bundles
+```
+
+Inside this `bundles` directory, create a file named `portal-ext.properties` with the following content:
+
+```properties
+## Database Configuration
+jdbc.default.driverClassName=com.mysql.jdbc.Driver
+jdbc.default.url=jdbc:mysql://localhost/lportal_master?useUnicode=true&characterEncoding=UTF-8
+jdbc.default.username=YOUR_MYSQL_USERNAME
+jdbc.default.password=YOUR_MYSQL_PASSWORD
+
+## Development Configuration
+browser.launcher.url=
+
+## Disable caches
+com.liferay.portal.servlet.filters.cache.CacheFilter=false
+com.liferay.portal.servlet.filters.alloy.CSSFilter=false
+com.liferay.portal.servlet.filters.etag.ETagFilter=false
+com.liferay.portal.servlet.filters.header.HeaderFilter=false
+com.liferay.portal.servlet.filters.themepreview.ThemePreviewFilter=true
+
+combo.check.timestamp=true
+
+javascript.fast.load=false
+javascript.log.enabled=false
+
+layout.template.cache.enabled=false
+
+minifier.enabled=false
+minifier.inline.content.cache.size=0
+
+module.framework.properties.lpkg.index.validator.enabled=false
+
+# Enable gogo shell
+module.framework.properties.osgi.console=localhost:11311
+```
+
+## Compiling
+
+Make sure you have been able to clone the `liferay-portal` repository before you start with this step.
+
+Your `portal` directory should now look like this:
+
+```shell
+
+- portal
+ |
+ |- bundles
+ |  |
+ |  |- portal-ext.properties
+ |
+ |- liferay-portal
+ |  |
+ |  |- lots of directories and files ...
+
+```
+
+Navigate to the `liferay-portal` directory and run the following command:
+
+```shell
+ant all
+
+# This should take about 30-40 minutes the first time you do it on your machine
+# It should also end with a "BUILD SUCCESSFUL" message, but if it doesn't
+# ask @julien for some help
+```
+
+Once that's done, you can launch tomcat with the following command:
+
+
+```shell
+# Assuming your are in the 'portal/liferay-portal' directory
+
+../bundles/tomcat-VERISON/bin/catalina.sh run
+```
+
+If everything is OK once the server is started a browser window will be opened pointing at `http://localhost:8080`.
+
+Since this is the first time your executing `liferay-portal` you'll have to answer to a few questions in a wizard
+(we typically use `test` as the user name and password in development mode but you can choose anything you want).
+
+Once that's done, you'll need to stop the tomcat process and start it again.
+
+If you don't want a new browser tab to be opened each time you start tomcat, you can add
+
+```properties
+browser.launcher.url=
+```
+
+To your `portal-ext.properties` file
+
+## Last steps
+
+Add an 'upstream' remote to your local `liferay-portal` repository
+
+```shell
+git remote add upstream git@github.com:liferay/liferay-portal.git
+```
+
+Configure the `gh` utlity
+
+```json
+{
+  "version": "1.11.4",
+  "api": {
+    "host": "api.github.com",
+    "protocol": "https",
+    "version": "3.0.0",
+    "pathPrefix": null
+  },
+  "default_branch": "master",
+  "default_remote": "origin",
+  "default_pr_forwarder": "",
+  "default_pr_reviewer": "",
+  "github_token": "YOUR_GITHUB_TOKEN",
+  "github_user": "YOUR_GITHUB_USERNAME",
+  "hooks": {
+    "issue": {
+      "close": {
+        "before": [],
+        "after": []
+      },
+      "new": {
+        "before": [],
+        "after": [
+          "gh is --browser {{options.browser}} --user {{options.user}} --repo {{options.repo}} --number {{options.number}}"
+        ]
+      },
+      "open": {
+        "before": [],
+        "after": []
+      }
+    },
+    "pull-request": {
+      "close": {
+        "before": [],
+        "after": []
+      },
+      "fetch": {
+        "before": [],
+        "after": [
+          "gh pr {{options.number}} --user {{options.user}} --repo {{options.repo}} --comment 'Just started reviewing :)'"
+        ]
+      },
+      "fwd": {
+        "before": [],
+        "after": [
+          "gh pr {{options.submittedPullNumber}} --user {{options.fwd}} --comment '/cc @{{options.submittedUser}}'",
+          "gh pr {{options.number}} --user {{options.user}} --repo {{options.repo}} --comment 'Pull request forwarded to {{forwardedLink}}.{{#if options.changes}} [See changes here.]({{compareLink}}){{/if}}'",
+          "gh pr {{options.number}} --close"
+        ]
+      },
+      "merge": {
+        "before": [],
+        "after": [
+          "gh pr {{options.number}} --user {{options.user}} --repo {{options.repo}} --comment 'Thank you, pull request merged!{{#if options.changes}} [See changes here.]({{compareLink}}){{/if}}'"
+        ]
+      },
+      "open": {
+        "before": [],
+        "after": []
+      },
+      "submit": {
+        "before": [],
+        "after": [
+          "{{#if options.number}}gh pr {{options.number}} --user {{options.user}} --repo {{options.repo}} --comment 'Pull request submitted to {{submittedLink}}.{{#if options.changes}} [See changes here.]({{compareLink}}){{/if}}'{{/if}}",
+          "gh pr --browser {{options.browser}} --user {{options.submit}} --repo {{options.repo}} --number {{options.submittedPull}}",
+          "{{#if options.number}}gh pr --user {{options.user}} --repo {{options.repo}} {{options.number}} --close{{/if}}"
+        ]
+      }
+    },
+    "repo": {
+      "delete": {
+        "before": [],
+        "after": []
+      },
+      "fork": {
+        "before": [],
+        "after": []
+      },
+      "new": {
+        "before": [],
+        "after": [
+          "gh re --browser {{options.browser}} --user {{options.user}} --repo {{options.new}}"
+        ]
+      }
+    },
+    "gists": {
+      "delete": {
+        "before": [],
+        "after": []
+      },
+      "fork": {
+        "before": [],
+        "after": [
+          "gh gi --browser {{options.browser}} --id {{options.id}}"
+        ]
+      },
+      "new": {
+        "before": [],
+        "after": [
+          "gh gi --browser {{options.browser}} --id {{options.id}}"
+        ]
+      }
+    }
+  },
+  "ignored_plugins": [],
+  "pull_branch_name_prefix": "pr-",
+  "plugins": {
+    "jira": {
+      "host": "issues.liferay.com",
+      "user": "YOUR_JIRA_USERNAME",
+      "password": "YOUR_JIRA_PASSWORD",
+      "base": "rest/api/2"
+    }
+  },
+  "replace": {},
+  "signature": " <br><br>:octocat: *Sent from [GH](http://nodegh.io).*",
+  "plugins_path": "PATH_TO_YOUR_NODE_INSTALLATION/lib/node_modules"
+}
+```
 
