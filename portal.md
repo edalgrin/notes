@@ -5,6 +5,11 @@ This is a guide to setup [liferay-portal](https://github.com/liferay/liferay-por
 For the moment this document is "macOS" (and MacOS X) specific but I'll add notes
 for linux and Windows later on.
 
+**IMPORTANT:**
+
+- Read this document first and if you think you need help don't hesitate to ask.
+
+
 ## Basic Requirements
 
 This guide assumes that:
@@ -169,7 +174,7 @@ mysql.server start
 ```
 
 You might also want to secure your `mysql` installation by running the following command:
-**NOTE:** If you have no idea of what your doing, ask @julien for some help.
+
 
 ```shell
 mysql_secure_installation
