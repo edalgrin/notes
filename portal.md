@@ -156,6 +156,9 @@ brew install ant mysql@5.7
 
 If the above fails, ask for help.
 
+If you have a pre-existing MySQL installation — or a related one, such as MariaDB — on your system, you may need to uninstall it before proceeding. For example, I had a MariaDB installation that I had to remove (`brew uninstall mariadb`) as well as blowing away the contents of `/usr/local/var/mysql` because the files there were preventing the server from starting with errors in the `/usr/local/var/mysql/$(hostname).err` log files such as "InnoDB: Unsupported redo log format. The redo log was created with MariaDB".
+
+#### Verifying the installation
 
 Wait for everything to complete correctly and make sure you have access to both the `ant` and `mysql` commands.
 
