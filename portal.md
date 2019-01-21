@@ -182,7 +182,7 @@ mysql --version
 Make sure that you can start the MySQL server correctly
 
 ```shell
-mysql.server start
+brew services start mysql@5.7
 ```
 
 You might also want to secure your `mysql` installation by running the following command:
