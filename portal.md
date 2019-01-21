@@ -28,7 +28,7 @@ This guide assumes that:
 
 2. Fork the [liferay-portal](https://github.com/liferay/liferay-portal) repository to your account.
 
-3. Create a `portal` directory:
+3. Create a `portal` directory anywhere of your choosing:
 
     ```shell
     mkdir -p portal
