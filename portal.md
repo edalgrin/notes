@@ -357,7 +357,7 @@ git remote add upstream git@github.com:liferay/liferay-portal.git
 
 Configure the `gh` utlity:
 
-Create a file named `.gh.json` in your home directory with the following content:
+Run `gh us` to create the following configuration file named `.gh.json` in your home directory. If that doesn't work you can create the file manually with these contents:
 
 ```json
 {
@@ -505,6 +505,25 @@ gh ji
 **IMPORTANT:**
 
 When prompted for the server, enter "issues.liferay.com"
+
+Here's an example of how you would create a task from the command-line, :
+
+```shell
+gh jira --new \
+  --project IFI \
+  --title "Set up liferay-portal developer environment" \
+  --message 'Going through set-up documented in https://github.com/julien/notes/blob/master/portal.md and creating PRs along the way for any issues discovered in the notes.' \
+  --type Task
+```
+
+You should see output like the following:
+
+```
+Creating a new issue on project IFI
+https://issues.liferay.com/browse/IFI-422
+```
+
+For more details, see [the gh-gira documentation](https://www.npmjs.com/package/gh-jira).
 
 ## Well done
 
