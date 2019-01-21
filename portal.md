@@ -112,6 +112,10 @@ java -version
 # Java HotSpot(TM) 64-Bit Server VM (build 25.152-b16, mixed mode)
 ```
 
+#### Using the Open JDK
+
+In theory, you may be able to use the [Open JDK](https://jdk.java.net/) 11 with Liferay, installed with Homebrew (`brew cask install java`). In practice I found that the version that it currently installs produces an error message ("Please use Java 1.8.") when you attempt to build. If you already have this JDK installed on your system you may have to remove it (`brew cask uninstall java`) and install the Oracle version as described above instead.
+
 ### nodejs
 
 Open your browser and visit [this](https://nodejs.org/en/download/) URL.
