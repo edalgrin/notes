@@ -320,7 +320,7 @@ To the `portal-ext.properties` file your created.
 
 ### Optional: Speed up compilation by cloning [liferay-binaries-cache-2017](https://github.com/liferay/liferay-binaries-cache-2017)
 
-This repo contains pre-build binaries of the third-party dependencies of the portal. If you clone it as a peer of your `bundles` directory, it will speed up compilation:
+This repo contains pre-built binaries of the third-party dependencies of the portal. If you clone it as a peer of your `bundles` directory, it will speed up compilation:
 
 ```sh
 cd ..
