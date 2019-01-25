@@ -342,7 +342,7 @@ After this, your directory structure should look like:
  |
  |- bundles
  |  |
- |  |- portal-ext.properties 
+ |  |- portal-ext.properties
  |  |- ...
  |
  |- liferay-binaries-cache-2017
@@ -355,6 +355,23 @@ After this, your directory structure should look like:
 ```
 
 ## Last steps
+
+Change defaut tomcat settings by editing the `CATALINA_OPTS` environment
+variable. To do so, edit the `setenv.sh` file.
+
+```shell
+# You'll need to replace
+# tomcat-VERSION with the tomcat version that comes with liferay-portal.
+# Tip: Use the tab key assuming your shell has tab completion.
+
+$EDITOR bundles/tomcat-VERSION/bin/setenv.sh
+```
+
+These are some recommended settings for development
+
+```shell
+CATALINA_OPTS="$CATALINA_OPTS -Dfile.encoding=UTF8 -Djava.net.preferIPv4Stack=true -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false -Duser.timezone=GMT -Xms4096m -Xmx4096m -XX:MaxNewSize=2048m -XX:MaxMetaspaceSize=768m -XX:MetaspaceSize=768m -XX:NewSize=2560m -XX:SurvivorRatio=7"
+```
 
 Add an `upstream` remote to your local `liferay-portal` repository that points to `liferay` 's repo on GitHub.
 
